@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #111;
+            font-family: Arial;
+        }
+
+        .calculator {
+            max-width: 350px;
+            margin: 40px auto;
+        }
+
+        #display {
+            width: 100%;
+            box-sizing: border-box;
+            height: 80px;
+            font-size: 35px;
+            text-align: right;
+            padding: 10px;
+            border-radius: 15px;
+            border: none;
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 65px;
+            font-size: 24px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .clear {
+            grid-column: span 3;
+        }
+
+        .operator {
+            background: orange;
+        }
+
+        .equal {
+            background: green;
+            color: white;
+        }
+
+        #error {
+            color: white;
+            text-align: center;
+            height: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <input id="display" value="0" readonly>
+
+    <div id="error"></div>
+
+    <div class="buttons">
+
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="operator" onclick="add('/')">÷</button>
+
+        <button onclick="add('7')">7</button>
+        <button onclick="add('8')">8</button>
+        <button onclick="add('9')">9</button>
+        <button class="operator" onclick="add('*')">×</button>
+
+        <button onclick="add('4')">4</button>
+        <button onclick="add('5')">5</button>
+        <button onclick="add('6')">6</button>
+        <button class="operator" onclick="add('-')">−</button>
+
+        <button onclick="add('1')">1</button>
+        <button onclick="add('2')">2</button>
+        <button onclick="add('3')">3</button>
+        <button class="operator" onclick="add('+')">+</button>
+
+        <button onclick="add('0')">0</button>
+        <button onclick="add('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+
+    </div>
+
+</div>
+
+<script>
+
+let expression = "";
+
+function add(value) {
+    expression += value;
+    document.getElementById("display").value = expression;
+    document.getElementById("error").innerText = "";
+}
+
+function clearDisplay() {
+    expression = "";
+    document.getElementById("display").value = "0";
+    document.getElementById("error").innerText = "";
+}
+
+function calculate() {
+
+    try {
+
+        if (expression === "") {
+            return;
+        }
+
+        if (expression.includes("/0")) {
+            throw new Error();
+        }
+
+        let result = Function(
+            "return " + expression
+        )();
+
+        if (!Number.isFinite(result)) {
+            throw new Error();
+        }
+
+        expression = String(result);
+
+        document.getElementById("display").value = result;
+
+    } catch {
+
+        document.getElementById("display").value = "Error";
+        document.getElementById("error").innerText =
+            "Calculation error!";
+
+        expression = "";
+    }
+}
+
+</script>
+
+</body>
+</html>
